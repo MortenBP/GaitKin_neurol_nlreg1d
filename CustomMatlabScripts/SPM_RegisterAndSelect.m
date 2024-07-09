@@ -12,9 +12,7 @@ for i = 1:length(DataCycles)
     Yr = SPM_RegisterLinear(DataCycles(i).(VariableOfInterest{1})(plane,:),RegisterLength);
     Y(i,[1:length(Yr')]) = Yr'; % Gait cycle data variable
     A(i,:) = DataCycles(i).UnloadLevel; % Unloading level variable
-    Subj(i,:) = cellstr(DataCycles(i).Subject); % Subject ID variable
+    Subj(i,:) = DataCycles(i).Subject; % Subject ID variable
 end
 
-% outputs the top correlating gait cycles in variables ready for SPM
-% analysis.
 [~,~,Subj1] = unique(Subj); % Identifies unique names and outputs in numbers.

@@ -139,11 +139,11 @@ SPM_GDI_Graph(DataStruct);
 
 
 
-%% Non-linear registrated SPM figures with MANOVA
+%% Non-linear reg SPM figures with MANOVA
 % Matlab Dependencies: add SPM1D toolbox to your workpath, fdasrvf matlab package, curve fitting matlab package.
 % Python environment dependencies: numpy, scipy, fdasrf, spm1d, nlreg1d,
 % skfda, scikit-fda
-% To install nlreg1d to your python environment, follow the instructions at https://github.com/0todd0000/nlreg1d
+% nlreg1d has to be downloaded manua
 clear classes % clearing classes is needed to refresh non-linear calculations
 load('./Data/data_Kinematic.mat')
 
@@ -288,3 +288,133 @@ colorScheme = [0,0,0; 0, 0.4470, 0.7410; 0.9290, 0.6940, 0.1250; 0.4940, 0.1840,
 
 % Create SPM_Graph of timeSeriesData and Clusters
 SPM_GDI_nlreg_Graph(DataStruct, no_deviation_clouds, PlotTitles, PlotYLabels, PlotXLabel, LegendText, colorScheme);
+
+
+%% Non-linear reg SPM figures without MANOVA
+% Matlab Dependencies: SPM1D, fdasrvf matlab package, curve fitting matlab package.
+% Python environment dependencies: numpy, scipy, fdasrf, spm1d, nlreg1d,
+% skfda, scikit-fda
+
+% Add Matlab folders to Matlab path
+addpath(genpath('C:\Users\mlyngpedersen\OneDrive - Syddansk Universitet\FYS PhD\Study 2, Gait analysis\Matlab Scripts'))
+addpath(genpath('C:\Users\mlyngpedersen\OneDrive - Syddansk Universitet\FYS PhD\Study 2, Gait analysis\Python Scripts'))
+
+% Set Python 3.9 as active environment
+clear classes % clearing classes is needed to refresh non-linear calculations
+pyenv('Version', 'C:\Users\mlyngpedersen\AppData\Local\Programs\Python\Python39\python.exe')
+% Add Python 3.9 to python system path
+path2_39 = 'C:\Users\mlyngpedersen\AppData\Local\Programs\Python\Python39';
+if count(py.sys.path, path2_39) == 0
+    insert(py.sys.path, int32(0),path2_39)
+end
+
+% Add custom python function to python system path
+path2py = fileparts(which('nlreg2matlab.py'));
+if count(py.sys.path, path2py) == 0
+    insert(py.sys.path, int32(0),path2py)
+end
+
+% Load and reload cystom python nlreg function
+nlregmod = py.importlib.import_module('nlreg2matlab5');
+py.importlib.reload(nlregmod);
+pyenv %reports if environment has been loaded
+
+%Specify SPM input: the 9 variables and planes and the register length
+VariablesForAnalysis = {'PelvisAngles', 'PelvisAngles', 'PelvisAngles', 'HipAngles', 'HipAngles', 'HipAngles', 'KneeAngles', 'AnkleAngles', 'FootProgressAngles'};
+VariablePlane = [1, 2, 3, 1, 2, 3, 1, 1, 1];
+RegisterLength = 101; % Specify length of registration
+
+% Perform analyses and create data variables for plotting
+% Loops over all specified variables
+for p = 1:length(VariablesForAnalysis)
+
+    % Register and select gait cycles for a specified variable
+    [Y, A, SubjYA] = SPM_RegisterAndSelect(DataCycles_selected,VariablesForAnalysis(p),RegisterLength,VariablePlane(p));
+
+    % Non linear registration and displacement field calculations
+    Ypy = py.numpy.double(Y);
+    Ypy_nlreg_data = nlregmod.get_nlreg_data(Ypy);
+    Ypy_nlreg_displacement = nlregmod.get_nlreg_displacement(Ypy);
+    Y_nlreg_traj = double(Ypy_nlreg_data+0);
+    Y_nlreg_disp = double(Ypy_nlreg_displacement+0);
+    Y_nlreg_disp(:,1) = Y_nlreg_disp(:,2);
+    Y_nlreg_disp(:,101) = Y_nlreg_disp(:,100);
+
+    % Create the timeSeriesData iterating through unload levels for all participants
+    uLevels = unique(A);
+    for i = 1:length(uLevels)
+        timeSeriesData(:,:,i) = Y(A==uLevels(i),:);
+    end
+        
+    % Perform ANOVA*lreg on timeseries data for all 6 unload levels
+    alpha      = 0.05; % Alpha corrected for 6 unload levels
+    nTests     = 1;
+    p_critical = spm1d.util.p_critical_bonf(alpha, nTests);    
+    f_anova       = spm1d.stats.anova1rm(Y, A, SubjYA);
+    fi_anova      = f_anova.inference(p_critical);
+
+    % Perform ANOVA*Magnitude on timeseries data for all 6 unload levels
+    alpha      = 0.05; % Alpha corrected for 6 unload levels
+    nTests     = 1;
+    p_critical = spm1d.util.p_critical_bonf(alpha, nTests);    
+    f_anova_mag       = spm1d.stats.anova1rm(Y_nlreg_traj, A, SubjYA);
+    fi_anova_mag      = f_anova_mag.inference(p_critical);
+
+    % Perform ANOVA*Timing on timeseries data for all 6 unload levels
+    alpha      = 0.05; % Alpha corrected for 6 unload levels
+    nTests     = 1;
+    p_critical = spm1d.util.p_critical_bonf(alpha, nTests);    
+    f_anova_time       = spm1d.stats.anova1rm(Y_nlreg_disp, A, SubjYA);
+    fi_anova_time      = f_anova_time.inference(p_critical);
+
+    % Extract cluster values of lreg and nlreg SPM ANOVA and ttest inference calculations
+    if fi_anova.nClusters >= 1
+        for o = 1:fi_anova.nClusters
+            ClusterCell{o} = fi_anova.clusters{o}.endpoints;
+        end
+    else
+        ClusterCell{1} = [0,0]; % creates an empty cell if no clusters were found
+    end
+    clusterData{1,:} = ClusterCell;
+    clusterCount{1} = fi_anova.nClusters;
+    clearvars ClusterCell
+
+   if fi_anova_mag.nClusters >= 1
+        for o = 1:fi_anova_mag.nClusters
+            ClusterCell{o} = fi_anova_mag.clusters{o}.endpoints;
+        end
+    else
+        ClusterCell{1} = [0,0]; % creates an empty cell if no clusters were found
+    end
+    clusterData{2,:} = ClusterCell;
+    clusterCount{2} = fi_anova_mag.nClusters;
+    clearvars ClusterCell
+
+    if fi_anova_time.nClusters >= 1
+        for o = 1:fi_anova_time.nClusters
+            ClusterCell{o} = fi_anova_time.clusters{o}.endpoints;
+        end
+    else
+        ClusterCell{1} = [0,0]; % creates an empty cell if no clusters were found
+    end
+    clusterData{3,:} = ClusterCell;
+    clusterCount{3} = fi_anova_time.nClusters;
+    clearvars ClusterCell
+
+    % Creates the Datastruct from timeseries data and clusters
+    DataStruct(p).Data = timeSeriesData;
+    DataStruct(p).Clusters = clusterData;
+    DataStruct(p).ClusterCount = clusterCount;
+end
+
+% Plot options
+no_deviation_clouds = true; % if true, only basline measure (0%) will have an error cloud.
+PlotTitles = {'Pelvis', 'Pelvis', 'Pelvis', 'Hip', 'Hip', 'Hip', 'Knee', 'Ankle', 'Foot Progression'};
+PlotYLabels = {'Post.-Ant. Tilt (deg.)', 'Up-Down Obl. (deg.)', 'Ext.-Int. Rot. (deg.)', 'Ext.-Flex. (deg.)', 'Abd.-Add. (deg.)', 'Ext.-Int. Rot. (deg.)', 'Flex. (deg.)', 'Plant.-Dors.Flex. (deg.)', 'Sup.-Pron. (deg.)'};
+PlotXLabel = {'% Gait cycle'};
+LegendText = {'  0% BWS', '10% BWS', '20% BWS', '30% BWS', '40% BWS', '50% BWS', ...
+    'SPM ANOVA (p < 0.05)', 'SPM ANOVA*Magnitude', 'SPM ANOVA*Timing'};
+colorScheme = [0,0,0; 0, 0.4470, 0.7410; 0.9290, 0.6940, 0.1250; 0.4940, 0.1840, 0.5560; 0.4660, 0.6740, 0.1880; 0.6350 0.0780 0.1840];
+
+% Create SPM_Graph of timeSeriesData and Clusters
+SPM_GDI_nlreg_noManova_Graph(DataStruct, no_deviation_clouds, PlotTitles, PlotYLabels, PlotXLabel, LegendText, colorScheme);

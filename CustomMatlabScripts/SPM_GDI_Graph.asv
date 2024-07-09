@@ -6,11 +6,24 @@ function SPM_GDI_Graph(DataStruct, no_deviation_clouds, PlotTitles, PlotYLabels,
         PlotYLabels = {'Post.-Ant. Tilt (deg.)', 'Up-Down Obl. (deg.)', 'Ext.-Int. Rot. (deg.)', 'Ext.-Flex. (deg.)', 'Abd.-Add. (deg.)', 'Ext.-Int. Rot. (deg.)', 'Flex. (deg.)', 'Plant.-Dors.Flex. (deg.)', 'Sup.-Pron. (deg.)'};
         PlotXLabel = {'% Gait cycle'};
         LegendText = {'0% BWS', '10% BWS', '20% BWS', '30% BWS', '40% BWS', '50% BWS', ...
-    'SPM ANOVA (p < 0.05)', 'SPM post hoc test: 0% vs 10%', 'SPM post hoc test: 0% vs 20%', 'SPM post hoc test: 0% vs 30%', 'SPM post hoc test: 0% vs 40%', 'SPM post hoc test: 0% vs 50%'};
-        colorScheme = [0,0,0; 0, 0.4470, 0.7410; 0.9290, 0.6940, 0.1250; 0.4940, 0.1840, 0.5560; 0.4660, 0.6740, 0.1880; 0.6350 0.0780 0.1840]; % Color scheme for entire figure, first row is always black for primary timeSeriesData measure.
+    'SPM ANOVA (p < 0.05)', 'SPM post hoc test: 0% vs 10%', 'SPM post hoc test: 0% vs 20%', 'SPM post hoc test: 0% vs 30%', 'SPM post hoc test: 0% vs 40%', 'SPM post hoc test: 0% vs 50%', ...
+    '};
+        colorScheme = [0,0,0;turbo(numel(DataStruct))]; % Color scheme for entire figure, first row is always black for primary timeSeriesData measure.
         lineWidth = 2
         errorAlpha = 0.2
     end
+
+    no_deviation_clouds = true; 
+PlotTitles = {'Pelvis', 'Pelvis', 'Pelvis', 'Hip', 'Hip', 'Hip', 'Knee', 'Ankle', 'Foot Progression'};
+PlotYLabels = {'Post.-Ant. Tilt (deg.)', 'Up-Down Obl. (deg.)', 'Ext.-Int. Rot. (deg.)', 'Ext.-Flex. (deg.)', 'Abd.-Add. (deg.)', 'Ext.-Int. Rot. (deg.)', 'Flex. (deg.)', 'Plant.-Dors.Flex. (deg.)', 'Sup.-Pron. (deg.)'};
+PlotYLabelsSecondary = {'Abs. Diff.', 'Abs. Diff.', 'Abs. Diff.'};
+nParticipantsPlots = [18, 18, 18, 18, 18, 18, 18, 18, 18];
+PlotXLabel = {'% Gait cycle'};
+LegendText = {'  0% BWS', '10% BWS', '20% BWS', '30% BWS', '40% BWS', '50% BWS', ...
+    'SPM ANOVA (p < 0.05)', 'SPM post hoc test: 0% vs 10%', 'SPM post hoc test: 0% vs 20%', 'SPM post hoc test: 0% vs 30%', 'SPM post hoc test: 0% vs 40%', 'SPM post hoc test: 0% vs 50%', ...
+    '|Diff. (0%/10%)|(sec.axis)', '|Diff. (0%/20%)|(sec.axis)', '|Diff. (0%/30%)|(sec.axis)', '|Diff. (0%/40%)|(sec.axis)', '|Diff. (0%/50%)|(sec.axis)'};
+colorScheme = [0,0,0; 0, 0.4470, 0.7410; 0.9290, 0.6940, 0.1250; 0.4940, 0.1840, 0.5560; 0.4660, 0.6740, 0.1880; 0.6350 0.0780 0.1840];
+
 
 % Number of cell variables
 [~,~,numLevels] = size(DataStruct(1).Data); % Number of unload levels
