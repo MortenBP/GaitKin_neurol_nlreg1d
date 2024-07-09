@@ -17,13 +17,14 @@ The nlreg1d repository contains primarily wrapper functions to key functionality
 
 ## Dependencies
 Matlab dependencies include:
-- spm1d
+- spm1d (to install, download from repository and add to Matlab path)
 - daviolinplot
 - fdasrvf
 - Curve fitting
 
 Python Environment dependencies include:
 
+- [nlreg1d](https://github.com/0todd0000/nlreg1d) (to install, follow instructions on repository site)
 - python 3.9
 - numpy 1.22
 - scipy 1.8
