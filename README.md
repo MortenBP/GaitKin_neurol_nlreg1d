@@ -3,7 +3,6 @@
 This repository contains the code for generating a graphical representation of data for the study on gait pathology, kinematics and self-reported comfort in body weight supported gait of young adults with neurological disorders.
 
 <br>
-
 This repository contains code and example data associated with the paper:
 
 Pedersen MB, Simonsen MB, Aagaard P, Rasmussen G, Stengaard A, Holsgaard-Larsen A (in review). Quality, kinematics, and self-reported comfort of gait during body weight support in young adults with gait impairments – a cross-sectional study. 
@@ -52,4 +51,4 @@ To link your python environment to Matlab, follow the instructions in the main_a
 
 ## Get started
 
-Open main_analysis.m in Matlab and follow the instructions in the live script.
+Open main_analysis.m in Matlab and follow the instructions in the script.
