@@ -1,6 +1,13 @@
 # GaitKin_neurol_nlreg1d
 
-Graphical representation of data for the study on gait pathology, kinematics and self-reported comfort in body weight supported gait of young adults with neurological disorders.
+This repository contains the code for generating a graphical representation of data for the study on gait pathology, kinematics and self-reported comfort in body weight supported gait of young adults with neurological disorders.
+A sample dataset is included.
+
+<img src="https://github.com/user-attachments/assets/a138a053-76d7-454c-a2f1-e7a6dd639441" width="600" height="600" />
+
+<img src="https://github.com/user-attachments/assets/420cbaef-986d-4bd6-bbb0-262ec73a0574" width="600" height="600" />
+
+<img src="https://github.com/user-attachments/assets/e60a8c56-3ac8-4c87-b97a-30b57375ad2e" width="600" height="600" />
 
 <br>
 
