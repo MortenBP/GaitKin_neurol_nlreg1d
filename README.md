@@ -6,7 +6,7 @@ This repository contains the code for generating a graphical representation of d
 
 This repository contains code and example data associated with the paper:
 
-Pedersen MB, Simonsen MB, Holsgaard-Larsen A (in review). Pathology, kinematics, and self-reported comfort of gait during body weight support in young adults with neurological disorders. 
+Pedersen MB, Simonsen MB, Aagaard P, Rasmussen G, Stengaard A, Holsgaard-Larsen A (in review). Quality, kinematics, and self-reported comfort of gait during body weight support in young adults with gait impairments – a cross-sectional study. 
 
 <img src="https://github.com/user-attachments/assets/a138a053-76d7-454c-a2f1-e7a6dd639441" width="600" height="600" />
 
