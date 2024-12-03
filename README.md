@@ -5,7 +5,7 @@ This repository contains the code for generating a graphical representation of d
 <br>
 This repository contains code and example data associated with the paper:
 
-Pedersen MB, Simonsen MB, Aagaard P, Rasmussen G, Stengaard A, Holsgaard-Larsen A (in review). Quality, kinematics, and self-reported comfort of gait during body weight support in young adults with gait impairments – a cross-sectional study. 
+Pedersen MB, Simonsen MB, Aagaard P, Holsgaard-Larsen A. Quality, kinematics, and self-reported comfort of gait during body weight support in young adults with gait impairments - A cross-sectional study. Gait Posture. 2024 Nov 22;116:1-15. doi: 10.1016/j.gaitpost.2024.11.014.
 
 <img src="https://github.com/user-attachments/assets/a138a053-76d7-454c-a2f1-e7a6dd639441" width="600" height="600" />
 
